@@ -1,6 +1,6 @@
 # e2e-MLOps
 
-An end to end guide for MLOps
+An end to end guide for MLOps, inspired by [this](https://github.com/microsoft/MLOpsPython/tree/master) repo.
 
 ## TODO
 
