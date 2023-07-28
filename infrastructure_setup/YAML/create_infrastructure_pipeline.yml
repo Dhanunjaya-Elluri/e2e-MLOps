@@ -4,7 +4,7 @@ trigger:
       - master
     paths:
       include:
-        - infrastructure_setup/config/*
+        - ../infrastructure_setup/config/*
 
 pr:
   branches:
@@ -12,7 +12,7 @@ pr:
       - master
     paths:
       include:
-        - infrastructure_setup/config/*
+        - ../infrastructure_setup/config/*
 
 pool:
   vmImage: "ubuntu-latest"

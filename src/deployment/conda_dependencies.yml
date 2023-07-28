@@ -28,3 +28,4 @@ dependencies:
       - regex==2023.6.3
       - seaborn
       - joblib
+      - python-dotenv
