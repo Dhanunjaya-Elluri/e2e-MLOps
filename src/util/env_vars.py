@@ -1,3 +1,6 @@
+__author__ = "Dhanunjaya Elluri"
+__email__ = "dhanunjaya@elluri.net"
+
 import os
 from dataclasses import dataclass
 from typing import Optional
@@ -20,7 +23,7 @@ class EnvVars:
     zip_file_path: Optional[str] = os.environ.get("ZIP_FILE_PATH")
 
     # AML Pipeline variables
-    sources_directory_train: Optional[str] = os.environ.get("SOURCES_DIR_TRAIN")
+    source_directory: Optional[str] = os.environ.get("SOURCE_DIR")
     deployment_folder: Optional[str] = os.environ.get("SOURCES_DEP_FILE_TRAIN")
     aml_environment_name: Optional[str] = os.environ.get("AML_ENV_NAME")
     aml_train_conda_dependencies_file: Optional[str] = os.environ.get(
@@ -37,3 +40,9 @@ class EnvVars:
     # Model variables
     model_name: Optional[str] = os.environ.get("MODEL_NAME")
     model_version: Optional[str] = os.environ.get("MODEL_VERSION")
+
+    # Train Config variables
+    train_script_path: Optional[str] = os.environ.get("TRAIN_SCRIPT_PATH")
+    evaluate_script_path: Optional[str] = os.environ.get("EVALUATE_SCRIPT_PATH")
+    register_script_path: Optional[str] = os.environ.get("REGISTER_SCRIPT_PATH")
+    score_script_path: Optional[str] = os.environ.get("SCORE_SCRIPT_PATH")

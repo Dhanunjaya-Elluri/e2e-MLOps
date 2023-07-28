@@ -1,3 +1,4 @@
 # Exclude .env file
 .env
 .vscode
+.DS_Store

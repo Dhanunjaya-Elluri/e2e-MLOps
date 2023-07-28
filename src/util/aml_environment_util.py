@@ -23,7 +23,8 @@ def create_or_get_environment(
     enable_docker: bool = None,
 ) -> Environment:
     """
-    Creates an Azure ML Environment if it doesn't exist or retrieves the existing environment.
+    Creates an Azure ML Environment if it doesn't exist or retrieves
+    the existing environment.
 
     Args:
         workspace (azureml.core.Workspace): The Azure ML workspace object.
@@ -39,8 +40,8 @@ def create_or_get_environment(
         # Get the list of existing environments in the workspace
         environments = Environment.list(workspace=workspace)
         restored_environment = environments.get(environment_name)
-
-        # If the environment doesn't exist or create_new is True, create a new environment
+        # If the environment doesn't exist or create_new is True,
+        # create a new environment
         if restored_environment is None or create_new:
             conda_dependencies_path = os.path.join(
                 env.deployment_folder, conda_dependencies_file
@@ -51,7 +52,8 @@ def create_or_get_environment(
             )
             restored_environment = new_env
 
-            # Enable Docker and set the base image for the environment if enable_docker is provided
+            # Enable Docker and set the base image for the environment
+            # if enable_docker is provided
             if enable_docker is not None:
                 restored_environment.docker.enabled = enable_docker
                 restored_environment.docker.base_image = DEFAULT_CPU_IMAGE
@@ -65,6 +67,7 @@ def create_or_get_environment(
 
         return restored_environment
 
-    except Exception as ex:
+    except Exception as e:
+        logger.error(f"An error occurred while creating the environment. \nError: {e}")
         traceback.print_exc()
         exit(1)

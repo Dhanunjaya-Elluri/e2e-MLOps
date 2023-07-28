@@ -9,6 +9,8 @@ dependencies:
   - numpy==1.25.1
   - pandas==2.0.3
   - pytest==7.4.0
+  - pytest-cov==3.0.0
+  - flake8==6.0.0
   - pip:
       - azureml-sdk==1.52.0
       - azureml-defaults==1.52.0
