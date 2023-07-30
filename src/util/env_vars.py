@@ -46,3 +46,5 @@ class EnvVars:
     evaluate_script_path: Optional[str] = os.environ.get("EVALUATE_SCRIPT_PATH")
     register_script_path: Optional[str] = os.environ.get("REGISTER_SCRIPT_PATH")
     score_script_path: Optional[str] = os.environ.get("SCORE_SCRIPT_PATH")
+    run_evaluation: Optional[str] = os.environ.get("RUN_EVALUATION", "true")
+    pipeline_version: Optional[str] = os.environ.get("BUILD_BUILDID")
