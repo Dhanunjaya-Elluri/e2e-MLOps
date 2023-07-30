@@ -16,6 +16,8 @@ logger = logging.getLogger(__name__)
 
 
 class PipelineBuilder:
+    """Class for building the pipeline."""
+
     def __init__(self, experiment_name):
         self.experiment_name = experiment_name
         self.env = EnvVars()
