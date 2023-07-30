@@ -1,0 +1,93 @@
+trigger:
+  branches:
+    include:
+      - master
+    paths:
+      include:
+        - ../azure_infrastructure_setup/config/*
+
+pr:
+  branches:
+    include:
+      - master
+    paths:
+      include:
+        - ../azure_infrastructure_setup/config/*
+
+pool:
+  vmImage: "ubuntu-latest"
+
+variables:
+  - group: MLOps-E2E-VG
+
+stages:
+  - stage: TerraformSetup
+    displayName: "Terraform Setup"
+    jobs:
+      - job: TerraformInstallerJob
+        displayName: "Use Terraform 1.5.1"
+        steps:
+          - task: charleszipp.azure-pipelines-tasks-terraform.azure-pipelines-tasks-terraform-installer.TerraformInstaller@0
+            displayName: "Install Terraform"
+            inputs:
+              terraformVersion: 1.5.1
+
+  - stage: TerraformExecution
+    displayName: "Terraform Execution"
+    dependsOn: TerraformSetup
+    jobs:
+      - job: TerraformInitJob
+        displayName: "Terraform Init"
+        steps:
+          - task: charleszipp.azure-pipelines-tasks-terraform.azure-pipelines-tasks-terraform-cli.TerraformCLI@0
+            displayName: "TF init - Deploy MLOps resources to Azure"
+            inputs:
+              command: init
+              commandOptions: "-backend=true -backend-config=$(Build.SourcesDirectory)/azure_infrastructure_setup/config/backend.tf"
+              workingDirectory: "$(Build.SourcesDirectory)/azure_infrastructure_setup/config"
+              backendType: azurerm
+              backendServiceArm: $(AZURE_RM_SVC_CONNECTION)
+              ensureBackend: true
+              backendAzureRmResourceGroupLocation: $(LOCATION)
+              backendAzureRmResourceGroupName: $(RESOURCE_GROUP)
+              backendAzureRmStorageAccountName: "$(BASE_NAME)statestor"
+              backendAzureRmStorageAccountSku: "Standard_LRS"
+              backendAzureRmContainerName: "tfstate-cont"
+              backendAzureRmKey: "mlopsinfra.tfstate"
+
+      - job: TerraformValidateJob
+        displayName: "Terraform Validate"
+        steps:
+          - task: charleszipp.azure-pipelines-tasks-terraform.azure-pipelines-tasks-terraform-cli.TerraformCLI@0
+            displayName: "TF validate - Deploy MLOps resources to Azure"
+            inputs:
+              command: validate
+              workingDirectory: "$(Build.SourcesDirectory)/azure_infrastructure_setup/config"
+
+      - job: TerraformPlanJob
+        displayName: "Terraform Plan"
+        steps:
+          - task: charleszipp.azure-pipelines-tasks-terraform.azure-pipelines-tasks-terraform-cli.TerraformCLI@0
+            displayName: "TF plan - Deploy MLOps resources to Azure"
+            inputs:
+              command: plan
+              workingDirectory: "$(Build.SourcesDirectory)/azure_infrastructure_setup/config"
+              environmentServiceName: $(AZURE_RM_SVC_CONNECTION)
+            env:
+              TF_VAR_BASE_NAME: $(BASE_NAME)
+              TF_VAR_RESOURCE_GROUP: $(RESOURCE_GROUP)
+              TF_VAR_WORKSPACE_NAME: $(WORKSPACE_NAME)
+
+      - job: TerraformApplyJob
+        displayName: "Terraform Apply"
+        steps:
+          - task: charleszipp.azure-pipelines-tasks-terraform.azure-pipelines-tasks-terraform-cli.TerraformCLI@0
+            displayName: "TF apply - Deploy MLOps resources to Azure"
+            inputs:
+              command: apply
+              workingDirectory: "$(Build.SourcesDirectory)/azure_infrastructure_setup/config"
+              environmentServiceName: $(AZURE_RM_SVC_CONNECTION)
+            env:
+              TF_VAR_BASE_NAME: $(BASE_NAME)
+              TF_VAR_RESOURCE_GROUP: $(RESOURCE_GROUP)
+              TF_VAR_WORKSPACE_NAME: $(WORKSPACE_NAME)
